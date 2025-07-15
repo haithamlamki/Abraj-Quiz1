@@ -1,0 +1,62 @@
+[
+  {
+    "question": "What Important element is missing in the Abraj Driving Policy",
+    "answers": [
+      "Night Driving",
+      "Substance Abuse",
+      "Journey Management",
+      "Dashboard Fatigue Monitoring System"
+    ],
+    "correct": 3
+  },
+  {
+    "question": "The abbreviation IVMS stands for",
+    "answers": [
+      "In-vehicle Mileage System",
+      "Invert Machine Score",
+      "In-vehicle monitoring system",
+      "Intelligent Video Management System"
+    ],
+    "correct": 2
+  },
+  {
+    "question": "RAS is an abbreviation of:",
+    "answers": [
+      "Roadworthiness Assurance Standard",
+      "Road Accepted Standard",
+      "Road Accepted Safety",
+      "Road Assurance Standard"
+    ],
+    "correct": 0
+  },
+  {
+    "question": "Light vehicle Driver minimum age is 21 and heavy vehicle driver minimum age should be",
+    "answers": [
+      "23",
+      "25",
+      "26",
+      "21"
+    ],
+    "correct": 1
+  },
+  {
+    "question": "What will be consequence of tempering the Safety Devices in vehicle",
+    "answers": [
+      "Final Warning Letter",
+      "Dismissal from the Job",
+      "Verbal Warning Letter",
+      "First Warning Letter"
+    ],
+    "correct": 0
+  },
+  {
+    "question": "Drivers shall drive a maximum of how many hours within the 12-hour shift period",
+    "answers": [
+      "6 hurs",
+      "8 hours",
+      "10 hours",
+      "9 hours"
+    ],
+    "correct": 2
+  }
+] 
