@@ -32,8 +32,11 @@ const EnhancedReport = ({ testInfo, questions, results, logoUrl }) => {
             reader.readAsDataURL(blob);
           });
         }
-        doc.addImage(imgData, 'PNG', margin, y, 50, 50);
-      } catch (e) {/* ignore logo errors */}
+        
+    doc.addImage(imgData, 'PNG', margin, y, 50, 50);
+      } catch (e) {
+        // Ignore logo errors
+      }
     }
     doc.setFontSize(22);
     doc.setFont('helvetica', 'bold');
@@ -114,7 +117,7 @@ const EnhancedReport = ({ testInfo, questions, results, logoUrl }) => {
                 (line.startsWith('✔️') || line.includes('✔️')) &&
                 line.replace('✔️', '').trim().toLowerCase() === correct.trim().toLowerCase()
               ) {
-                if (data.cell.text[idx] !== undefined) {
+                if (data.cell.text[idx]) {
                   data.cell.styles.textColor = [255, 255, 255]; // White text
                   data.cell.styles.fontStyle = 'bold';
                   data.cell.styles.fillColor = [4, 162, 201]; // Abraj blue background
@@ -123,7 +126,7 @@ const EnhancedReport = ({ testInfo, questions, results, logoUrl }) => {
             });
           }
         }
-      },
+      }
     });
 
     // 4. Leaderboard Table
@@ -158,7 +161,7 @@ const EnhancedReport = ({ testInfo, questions, results, logoUrl }) => {
 
     // 5. Pagination and Footer
     const pageCount = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
+    for (let i = 1; i <= pageCount; i += 1) {
       doc.setPage(i);
       doc.setFontSize(9);
       doc.setTextColor(120);

@@ -3,32 +3,28 @@ import Button from "@/components/Button";
 import background from "@/assets/background.webp";
 import { usePlayerContext } from "@/context/player";
 import { useSocketContext } from "@/context/socket";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useLanguage } from "@/context/language";
 
 export default function GameWrapper({ children, textNext, onNext, manager, quizName }) {
   const { socket } = useSocketContext();
   const { player, dispatch } = usePlayerContext();
   const router = useRouter();
-  const { lang, toggleLang } = useLanguage();
+
+  
+  
   // Remove all isAr, lang, and Arabic text. Only use English text in UI and messages.
-
-  const [questionState, setQuestionState] = useState();
-  const [inviteCode, setInviteCode] = useState("");
-  const [playerCount, setPlayerCount] = useState(0);
-
   useEffect(() => {
     socket.on("game:kick", () => {
       dispatch({ type: "LOGOUT" });
       router.replace("/");
     });
-    socket.on("game:updateQuestion", ({ current, total }) => {
-      setQuestionState({ current, total });
+    socket.on("game:updateQuestion", () => {
+      // SetQuestionState({ current, total }); // Removed as questionState is not used here
     });
     if (manager) {
-      socket.on("manager:inviteCode", (code) => setInviteCode(code));
-      socket.on("manager:playerCount", (count) => setPlayerCount(count));
+      // Socket.on("manager:inviteCode", (code) => setInviteCode(code)); // Removed
+      // Socket.on("manager:playerCount", (count) => setPlayerCount(count)); // Removed
     }
     return () => {
       socket.off("game:kick");
@@ -36,15 +32,11 @@ export default function GameWrapper({ children, textNext, onNext, manager, quizN
       if (manager) {
         socket.off("manager:inviteCode");
         socket.off("manager:playerCount");
-    }
+      }
     };
   }, [manager, dispatch, router, socket]);
 
-  const texts = {
-    roomCode: "Room Code:",
-    players: "Players:",
-    langToggle: "EN",
-  };
+  
 
   return (
     <section
@@ -67,12 +59,12 @@ export default function GameWrapper({ children, textNext, onNext, manager, quizN
         <div className="flex items-center gap-4">
           <Image src="/abraj-logo.png" width={90} height={90} alt="Abraj Logo" className="mb-2" />
           <span className="text-5xl font-bold text-white tracking-wide">Abraj Quiz</span>
-        </div>
+            </div>
         <div className="flex items-center gap-4">
           {quizName && (
             <span className="text-xl font-bold text-white bg-[#04A2C9] px-4 py-2 rounded-lg shadow">{quizName}</span>
           )}
-        </div>
+          </div>
       </div>
       {/* Main Content (question, player list, etc.) */}
       <div className="flex-1 flex flex-col justify-center items-center w-full">
@@ -92,9 +84,9 @@ export default function GameWrapper({ children, textNext, onNext, manager, quizN
       {/* Player info for non-manager (if needed) */}
       {!manager && (
         <div className="z-50 flex items-center justify-between bg-white px-4 py-2 text-lg font-bold text-white">
-          <p className="text-gray-800">{!!player && player.username}</p>
+          <p className="text-gray-800">{Boolean(player) && player.username}</p>
           <div className="rounded-sm bg-gray-800 px-3 py-1 text-lg">
-            {!!player && player.points}
+            {Boolean(player) && player.points}
           </div>
         </div>
       )}

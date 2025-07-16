@@ -2,18 +2,14 @@ import Button from "@/components/Button";
 import GameWrapper from "@/components/game/GameWrapper";
 import ManagerPassword from "@/components/ManagerPassword";
 import { GAME_STATES, GAME_STATE_COMPONENTS_MANAGER } from "@/constants";
-import { usePlayerContext } from "@/context/player";
 import { useSocketContext } from "@/context/socket";
 import { useRouter } from "next/router";
-import { createElement, useEffect, useState, Fragment } from "react";
-import { useLanguage } from "@/context/language";
-import { useRef } from "react";
+import { createElement, useEffect, useState, Fragment, useRef } from "react";
 import toast from "react-hot-toast";
 
 export default function Manager() {
   const { socket } = useSocketContext();
-  const { lang, toggleLang } = useLanguage();
-  // Remove all isAr, lang, and Arabic text. Only use English text in UI and messages.
+  const router = useRouter();
 
   const [nextText, setNextText] = useState("Start");
   const [state, setState] = useState({
@@ -24,14 +20,10 @@ export default function Manager() {
     },
   });
   const [questions, setQuestions] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [editIndex, setEditIndex] = useState(null);
   const [form, setForm] = useState({ question: "", answers: ["", "", "", ""], correct: 0, time: 10 });
-  const [showQuestionsModal, setShowQuestionsModal] = useState(false);
   const fileInputRef = useRef();
   const [uploading, setUploading] = useState(false);
   const [generatedQuestions, setGeneratedQuestions] = useState([]);
-  const router = useRouter();
 
   useEffect(() => {
     setNextText("Start");
@@ -57,7 +49,7 @@ export default function Manager() {
           ...state.status,
           data: {
             ...state.status.data,
-            inviteCode: inviteCode,
+            inviteCode,
           },
         },
       });
@@ -95,7 +87,7 @@ export default function Manager() {
       setForm({ ...form, [e.target.name]: e.target.value });
     }
   };
-  const handleCorrectChange = (idx) => setForm({ ...form, correct: idx });
+  const handleCorrectChange = (idx) => setForm({ correct: idx });
   const resetForm = () => {
     setForm({ question: "", answers: ["", "", "", ""], correct: 0, time: 10 });
     setEditIndex(null);
@@ -115,9 +107,21 @@ export default function Manager() {
     setShowForm(true);
   };
   const handleDelete = (idx) => {
-    if (window.confirm("Are you sure to delete this question?")) {
-      socket.emit("manager:deleteQuestion", idx);
-    }
+    toast.promise(
+      new Promise((resolve, reject) => {
+        if (window.confirm("Are you sure to delete this question?")) {
+          socket.emit("manager:deleteQuestion", idx);
+          resolve();
+        } else {
+          reject(new Error("Deletion cancelled"));
+        }
+      }),
+      {
+        loading: "Deleting question...",
+        success: "Question deleted!",
+        error: "Failed to delete question.",
+      }
+    );
   };
 
   const handleCreate = () => {
@@ -145,7 +149,9 @@ export default function Manager() {
   // Handle file upload and AI question generation
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
     setUploading(true);
     setGeneratedQuestions([]);
     // Read file as base64 or text
@@ -178,11 +184,21 @@ export default function Manager() {
 
   // Add End Game handler with confirmation and toast
   const handleEndGame = () => {
-    if (window.confirm("Are you sure you want to end the game and return to the manager page?")) {
-      socket.emit("manager:abortQuiz");
-      // router.push("/manager");
-      // toast.success("Game ended. You have returned to the manager page.");
-    }
+    toast.promise(
+      new Promise((resolve, reject) => {
+        if (window.confirm("Are you sure you want to end the game and return to the manager page?")) {
+          socket.emit("manager:abortQuiz");
+          resolve();
+        } else {
+          reject(new Error("Game ending cancelled"));
+        }
+      }),
+      {
+        loading: "Ending game...",
+        success: "Game ended!",
+        error: "Failed to end game.",
+      }
+    );
   };
 
   useEffect(() => {

@@ -1,9 +1,8 @@
 import { useSocketContext } from "@/context/socket";
 import { useEffect, useState } from "react";
-import { useLanguage } from "@/context/language";
 import QRCode from "react-qr-code";
 
-export default function Room({ data: { text, inviteCode } }) {
+export default function Room({ data: { inviteCode } }) {
   const { socket } = useSocketContext();
   const [playerList, setPlayerList] = useState([]);
   const [qrModal, setQrModal] = useState(false);
@@ -11,26 +10,33 @@ export default function Room({ data: { text, inviteCode } }) {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(joinUrl);
-      alert("Link copied!");
+      toast.success("Link copied!");
     } catch {
-      alert("Copy failed");
+      toast.error("Copy failed");
     }
   };
 
+  const handleNewPlayer = (player) => {
+    setPlayerList((prev) => [...prev, player]);
+  };
+
+  const handleRemovePlayer = (playerId) => {
+    setPlayerList((prev) => prev.filter((p) => p.id !== playerId));
+  };
+
+  const handlePlayerKicked = (playerId) => {
+    setPlayerList((prev) => prev.filter((p) => p.id !== playerId));
+  };
+
   useEffect(() => {
-    socket.on("manager:newPlayer", (player) => {
-      setPlayerList((prev) => [...prev, player]);
-    });
-    socket.on("manager:removePlayer", (playerId) => {
-      setPlayerList((prev) => prev.filter((p) => p.id !== playerId));
-    });
-    socket.on("manager:playerKicked", (playerId) => {
-      setPlayerList((prev) => prev.filter((p) => p.id !== playerId));
-    });
+    socket.on("manager:newPlayer", handleNewPlayer);
+    socket.on("manager:removePlayer", handleRemovePlayer);
+    socket.on("manager:playerKicked", handlePlayerKicked);
+
     return () => {
-      socket.off("manager:newPlayer");
-      socket.off("manager:removePlayer");
-      socket.off("manager:playerKicked");
+      socket.off("manager:newPlayer", handleNewPlayer);
+      socket.off("manager:removePlayer", handleRemovePlayer);
+      socket.off("manager:playerKicked", handlePlayerKicked);
     };
   }, [socket]);
 

@@ -1,4 +1,4 @@
-export default function Pentagon({ className, fill, stroke }) {
+export default function Pentagon({ fill, stroke }) {
   return (
     <svg
       fill={fill}
@@ -10,9 +10,9 @@ export default function Pentagon({ className, fill, stroke }) {
       viewBox="-40.96 -40.96 593.93 593.93"
       transform="rotate(180)"
       stroke={fill}
-      stroke-width="0.005120100000000001"
+      strokeWidth="0.005120100000000001"
     >
-      <g stroke-width="0" />
+      <g strokeWidth="0" />
 
       <g
         strokeLinecap="round"

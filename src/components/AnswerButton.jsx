@@ -1,5 +1,5 @@
 import clsx from "clsx"
-import Triangle from "./icons/Triangle"
+
 
 export default function AnswerButton({
   className,

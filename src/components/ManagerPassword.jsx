@@ -1,5 +1,4 @@
 import Image from "next/image"
-import { usePlayerContext } from "@/context/player"
 import Form from "@/components/Form"
 import Button from "@/components/Button"
 import Input from "@/components/Input"
@@ -40,7 +39,7 @@ export default function ManagerPassword() {
     const onSuccess = (roomInvite) => {
       setLoading(false)
       setError("")
-      setSuccess("Room created! Invite code: " + roomInvite)
+      setSuccess(`Room created! Invite code: ${roomInvite}`)
       toast.success("Room created!")
     }
     socket.on("game:errorMessage", onError)

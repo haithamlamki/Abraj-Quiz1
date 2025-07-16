@@ -17,7 +17,7 @@ export default function CricleXmark({ className }) {
           height="56.00"
           rx="28"
           fill="#ffffff"
-          strokewidth="0"
+          strokeWidth="0"
         />
       </g>
 

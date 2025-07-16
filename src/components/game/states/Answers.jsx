@@ -1,6 +1,7 @@
 import AnswerButton from "../../AnswerButton";
 import { useSocketContext } from "@/context/socket";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import clsx from "clsx";
 import {
   ANSWERS_COLORS,
@@ -16,11 +17,13 @@ import { useLanguage } from "@/context/language";
 const calculatePercentages = (objectResponses) => {
   const keys = Object.keys(objectResponses);
   const values = Object.values(objectResponses);
-  if (!values.length) return [];
+  if (!values.length) {
+    return [];
+  }
   const totalSum = values.reduce((acc, cur) => acc + cur, 0);
-  let result = {};
-  keys.map((key) => {
-    result[key] = ((objectResponses[key] / totalSum) * 100).toFixed() + "%";
+  const result = {};
+  keys.forEach((key) => {
+    result[key] = `${((objectResponses[key] / totalSum) * 100).toFixed()}%`;
   });
   return result;
 };
@@ -42,7 +45,9 @@ export default function Answers({
     { volume: 0.2 }
   );
   const handleAnswer = (answer) => {
-    if (!player) return;
+    if (!player) {
+      return;
+    }
     socket.emit("player:selectedAnswer", answer);
     sfxPop();
   };
@@ -51,17 +56,18 @@ export default function Answers({
       playMusic();
       return;
     }
+
     stopMusic();
     sfxResults();
     setPercentages(calculatePercentages(responses));
-  }, [responses, playMusic, stopMusic]);
+  }, [responses, playMusic, stopMusic, sfxResults]);
   useEffect(() => {
-    if (!isPlaying) playMusic();
-  }, [isPlaying]);
+    if (!isPlaying) {
+      playMusic();
+    }
+  }, [isPlaying, playMusic]);
   useEffect(() => {
-    return () => {
-      stopMusic();
-    };
+    return () => stopMusic();
   }, [playMusic, stopMusic]);
   useEffect(() => {
     socket.on("game:cooldown", (sec) => {
@@ -103,8 +109,8 @@ export default function Answers({
         <h2 className="text-center text-3xl font-bold text-white drop-shadow-lg mb-2">
           {question}
         </h2>
-        {!!image && !responses && (
-          <img src={image} className="h-40 max-h-52 w-auto rounded-xl shadow-lg" />
+        {Boolean(image) && !responses && (
+          <Image src={image} alt="Question Image" className="h-40 max-h-52 w-auto rounded-xl shadow-lg" width={500} height={500} />
         )}
       </div>
       {/* Timer and answer count */}

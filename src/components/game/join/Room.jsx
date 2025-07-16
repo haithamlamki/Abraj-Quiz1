@@ -1,6 +1,6 @@
 import { usePlayerContext } from "@/context/player"
 import Form from "@/components/Form"
-import Button from "@/components/Button"
+
 import Input from "@/components/Input"
 import { useEffect, useState } from "react"
 import { socket } from "@/context/socket"
@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
  * @returns {JSX.Element}
  */
 export default function Room() {
-  const { player, dispatch } = usePlayerContext()
+  const { dispatch } = usePlayerContext()
   const [roomId, setRoomId] = useState("")
   const [error, setError] = useState("")
 
@@ -26,9 +26,9 @@ export default function Room() {
   }
 
   useEffect(() => {
-    const onSuccess = (roomId) => {
+    const onSuccess = (newRoomId) => {
       setError("");
-      dispatch({ type: "JOIN", payload: roomId });
+      dispatch({ type: "JOIN", payload: newRoomId });
     };
     const onError = (message) => {
       setError(message);

@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
  * @returns {JSX.Element}
  */
 export default function QuestionsEditor() {
-  const { lang } = useLanguage();
   const { socket } = useSocketContext();
   const router = useRouter();
   // Default 4 questions
@@ -93,14 +92,18 @@ export default function QuestionsEditor() {
   };
   const handleQuizImageChange = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (ev) => setQuizImage(ev.target.result);
     reader.readAsDataURL(file);
   };
   const handleQuestionImageChange = (idx, e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (ev) => {
       setQuestions((prev) => {
@@ -114,17 +117,19 @@ export default function QuestionsEditor() {
   const handleSaveAll = () => {
     if (socket && questions.length > 0) {
       socket.emit("manager:replaceQuestions", { quizName, quizImage, questions });
-      alert("All questions saved successfully! The page will now close.");
+      toast.success("All questions saved successfully! The page will now close.");
       window.close();
     } else {
-      alert("No questions to save.");
+      toast.error("No questions to save.");
     }
   };
 
   // Handler for PDF upload and AI question generation
   const handlePdfUpload = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
     setPdfFile(file);
   };
   const handleStartGeneration = async () => {

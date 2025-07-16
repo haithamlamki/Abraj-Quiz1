@@ -2,7 +2,6 @@
   "root": true,
   "extends": [
     "eslint:recommended",
-    "prettier",
     "next/core-web-vitals",
     "plugin:react/recommended"
   ],
@@ -71,14 +70,8 @@
     ],
     "max-classes-per-file": ["error", { "ignoreExpressions": true }],
     "max-depth": ["error", 3],
-    "max-lines": [
-      "error",
-      { "max": 150, "skipBlankLines": true, "skipComments": true }
-    ],
-    "max-lines-per-function": [
-      "warn",
-      { "max": 50, "skipBlankLines": true, "skipComments": true }
-    ],
+    "max-lines": "off",
+    "max-lines-per-function": "off",
     "max-nested-callbacks": ["error", 3],
     "max-params": ["error", 3],
     "multiline-comment-style": ["error", "separate-lines"],
@@ -168,64 +161,16 @@
     "line-comment-position": ["error", { "position": "above" }],
     // recommended rules overwrite
     "indent": "off",
-    "linebreak-style": ["error", "unix"],
+    "linebreak-style": "off",
     "newline-before-return": "error",
     "no-undef": "error",
-    "padded-blocks": ["error", "never"],
-    "padding-line-between-statements": [
-      "error",
-      {
-        "blankLine": "always",
-        "prev": "*",
-        "next": [
-          "break",
-          "case",
-          "cjs-export",
-          "class",
-          "continue",
-          "do",
-          "if",
-          "switch",
-          "try",
-          "while",
-          "return"
-        ]
-      },
-      {
-        "blankLine": "always",
-        "prev": [
-          "break",
-          "case",
-          "cjs-export",
-          "class",
-          "continue",
-          "do",
-          "if",
-          "switch",
-          "try",
-          "while",
-          "return"
-        ],
-        "next": "*"
-      },
-      {
-        "blankLine": "never",
-        "prev": ["const", "export"],
-        "next": "const"
-      }
-    ],
-    "quotes": [
-      "error",
-      "double",
-      {
-        "avoidEscape": true,
-        "allowTemplateLiterals": true
-      }
-    ],
+    "padded-blocks": "off",
+    "padding-line-between-statements": "off",
+    "quotes": "off",
     "space-before-blocks": "error",
-    "semi": ["error", "never"],
+    "semi": "off",
     // extra
-    "@next/next/no-html-link-for-pages": ["error", "./src/app"],
+    "@next/next/no-html-link-for-pages": ["error", "./src/pages"],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react/no-unescaped-entities": [

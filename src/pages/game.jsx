@@ -14,9 +14,9 @@ export default function Game() {
 
   useEffect(() => {
     if (!player) {
-      router.replace("/")
+      router.replace("/");
     }
-  }, [])
+  }, [player, router]);
 
   const [state, setState] = useState(GAME_STATES)
 
@@ -45,7 +45,7 @@ export default function Game() {
       socket.off("game:status")
       socket.off("game:reset")
     }
-  }, [state])
+  }, [state, dispatch, router, socket])
 
   return (
     <GameWrapper quizName={state.status.data?.subject}>

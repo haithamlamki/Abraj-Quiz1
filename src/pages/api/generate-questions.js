@@ -10,7 +10,8 @@ export const config = {
 };
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY; // optional, for better images
+// Optional, for better images
+const UNSPLASH_ACCESS_KEY = process.env.UNSPLASH_ACCESS_KEY;
 
 async function extractTextFromPdf(base64) {
   const buffer = Buffer.from(base64.split(',')[1], 'base64');
@@ -30,14 +31,14 @@ async function generateQuestionsFromText(text, numQuestions = 10) {
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.2,
-      max_tokens: 1500,
+      maxTokens: 1500,
     }),
   });
   const data = await res.json();
   let questions = [];
   try {
     questions = JSON.parse(data.choices[0].message.content);
-  } catch {
+  } catch (error) {
     questions = [];
   }
   return questions;
@@ -53,19 +54,25 @@ async function fetchImage(query) {
   // Fallback: use DuckDuckGo image search (public, but less reliable)
   const ddgRes = await fetch(`https://duckduckgo.com/?q=${encodeURIComponent(query)}&iax=images&ia=images`);
   const html = await ddgRes.text();
-  const match = html.match(/imgurl=([^&]+)&/);
-  if (match) return decodeURIComponent(match[1]);
+  const match = html.match(/imgurl=([^&]+)&/u);
+  if (match) {
+    return decodeURIComponent(match[1]);
+  }
   return null;
 }
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
   const { content, filename, numQuestions } = req.body;
-  if (!content) return res.status(400).json({ error: 'No PDF content provided' });
+  if (!content) {
+    return res.status(400).json({ error: 'No PDF content provided' });
+  }
   try {
     // 1. Extract text from PDF
     const text = await extractTextFromPdf(content);
-    console.log('Extracted text:', text);
+    
     // 2. Generate questions from text (OpenAI)
     const questions = await generateQuestionsFromText(text, numQuestions || 10);
     // 3. Fetch quiz image (based on filename or first question topic)

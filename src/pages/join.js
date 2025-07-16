@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 
 export default function Join() {
-  const { player, dispatch } = usePlayerContext();
+  const { dispatch } = usePlayerContext();
   const { socket } = useSocketContext();
   const [pin, setPin] = useState("");
   const [step, setStep] = useState("PIN");
@@ -42,21 +42,19 @@ export default function Join() {
 
   // Handle QR scan result
   const handleScan = (result) => {
-    if (!result) return;
-    let code = result?.text || result;
+    if (!result) {
+      return;
+    }
+    const code = result?.text || result;
     // Try to extract PIN from join link or direct code
-    let match = code.match(/room=([A-Za-z0-9]+)/);
+    const match = code.match(/room=([A-Za-z0-9]+)/u);
     if (match) {
       setPin(match[1]);
       setShowScanner(false);
-    } else if (/^[A-Za-z0-9]{4,}$/.test(code)) {
+    } else if (/^[A-Za-z0-9]{4,}$/u.test(code)) {
       setPin(code);
       setShowScanner(false);
     }
-  };
-  const handleError = (err) => {
-    alert("Failed to read QR code");
-    setShowScanner(false);
   };
 
   const texts = {

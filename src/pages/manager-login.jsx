@@ -10,6 +10,7 @@ export default function ManagerLogin() {
   // Redirect if already manager
   if (typeof window !== "undefined" && localStorage.getItem("isManager") === "true") {
     router.replace("/manager");
+    
     return null;
   }
 

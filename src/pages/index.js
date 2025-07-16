@@ -7,7 +7,7 @@ import Username from "@/components/game/join/Username";
 import dynamic from "next/dynamic";
 
 export default function Home() {
-  const { player, dispatch } = usePlayerContext();
+  const { dispatch } = usePlayerContext();
   const { socket } = useSocketContext();
   const [pin, setPin] = useState("");
   const [step, setStep] = useState("PIN");
@@ -40,7 +40,9 @@ export default function Home() {
 
   // Join handler
   const handleJoin = () => {
-    if (!pin) return;
+    if (!pin) {
+      return;
+    }
     socket.emit("player:checkRoom", pin);
   };
 
@@ -54,18 +56,18 @@ export default function Home() {
   // QR scan handler
   const handleScan = (result) => {
     if (!result) return;
-    let code = result?.text || result;
+    const code = result?.text || result;
     // Try to extract PIN from join link or direct code
-    let match = code.match(/room=([A-Za-z0-9]+)/);
+    const match = code.match(/room=([A-Za-z0-9]+)/);
     if (match) {
       setPin(match[1]);
       setShowScanner(false);
-    } else if (/^[A-Za-z0-9]{4,}$/.test(code)) {
+    } else if (/^[A-Za-z0-9]{4,}$/u.test(code)) {
       setPin(code);
       setShowScanner(false);
     }
   };
-  const handleError = (err) => {
+  const handleError = (error) => {
     toast.error("Failed to read QR code");
     setShowScanner(false);
   };
@@ -125,13 +127,13 @@ export default function Home() {
           <div className="text-center text-xs text-gray-700 py-2">
             {"Point your camera at a QR code to join instantly"}
           </div>
-          <button
+        <button
             className="main-btn w-full py-2 text-base font-bold bg-red-100 text-red-700"
             onClick={() => setShowScanner(false)}
-          >
+        >
             Close
-          </button>
-        </div>
+        </button>
+      </div>
       )}
         </>
       ) : (

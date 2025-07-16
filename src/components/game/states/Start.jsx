@@ -28,7 +28,7 @@ export default function Start({ data: { time, subject } }) {
       socket.off("game:startCooldown")
       socket.off("game:cooldown")
     }
-  }, [sfxBoump])
+  }, [sfxBoump, socket])
 
   return (
     <section className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col items-center justify-center">
